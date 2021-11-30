@@ -28,7 +28,9 @@ enum Days{
 }
 console.log(Days.Friday)
 
-const day = Days.Saturday
+const day = Days.Monday
+
+console.log(day)
 
 
 
