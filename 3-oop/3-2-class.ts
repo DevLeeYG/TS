@@ -34,4 +34,6 @@
   console.log(maker2);
 
   const maker3 = CoffeeMaker.makeMachine(3);
+
+  
 }
