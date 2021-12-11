@@ -1,148 +1,48 @@
-{
-    type CoffeeCup = {
-      shots: number;
-      hasMilk?: boolean;
-      hasSugar?: boolean;
-    };
-  
-    interface MilkFrother {
-      makeMilk(cup: CoffeeCup): CoffeeCup;
-    }
-  
-    interface SugarSource {
-      addSugar(cup: CoffeeCup): CoffeeCup;
-    }
-  
-    class CheapMilkSteamer implements MilkFrother {
-      makeMilk(cup: CoffeeCup): CoffeeCup {
-        console.log(`Steaming some milk🥛...`);
-        return {
-          ...cup,
-          hasMilk: true,
-        };
-      }
-    }
-  
-    class FancyMilkSteamer implements MilkFrother {
-      makeMilk(cup: CoffeeCup): CoffeeCup {
-        console.log(`Fancy!!!! Steaming some milk🥛...`);
-        return {
-          ...cup,
-          hasMilk: true,
-        };
-      }
-    }
-  
-    class AutomaticSugarMixer implements SugarSource {
-      addSugar(cuppa: CoffeeCup): CoffeeCup {
-        console.log(`Adding sugar...`);
-        return {
-          ...cuppa,
-          hasSugar: true,
-        };
-      }
-    }
-  
-    interface CoffeeMaker {
-      makeCoffee(shots: number): CoffeeCup;
-    }
-  
-    class CoffeeMachine implements CoffeeMaker {
-      private static BEANS_GRAMM_PER_SHOT: number = 7; // class level
-      private coffeeBeans: number = 0; // instance (object) level
-  
-      constructor(coffeeBeans: number) {
-        this.coffeeBeans = coffeeBeans;
-      }
-  
-      static makeMachine(coffeeBeans: number): CoffeeMachine {
-        return new CoffeeMachine(coffeeBeans);
-      }
-  
-      fillCoffeeBeans(beans: number) {
-        if (beans < 0) {
-          throw new Error('value for beans should be greater than 0');
-        }
-        this.coffeeBeans += beans;
-      }
-  
-      clean() {
-        console.log('cleaning the machine...🧼');
-      }
-  
-      private grindBeans(shots: number) {
-        console.log(`grinding beans for ${shots}`);
-        if (this.coffeeBeans < shots * CoffeeMachine.BEANS_GRAMM_PER_SHOT) {
-          throw new Error('Not enough coffee beans!');
-        }
-        this.coffeeBeans -= shots * CoffeeMachine.BEANS_GRAMM_PER_SHOT;
-      }
-  
-      private preheat(): void {
-        console.log('heating up... 🔥');
-      }
-  
-      private extract(shots: number): CoffeeCup {
-        console.log(`Pulling ${shots} shots... ☕️`);
-        return {
-          shots,
-          hasMilk: false,
-        };
-      }
-  
-      makeCoffee(shots: number): CoffeeCup {
-        this.grindBeans(shots);
-        this.preheat();
-        return this.extract(shots);
-      }
-    }
-  
-    class CaffeLatteMachine extends CoffeeMachine {
-      constructor(beans: number, public readonly serialNumber: string) {
-        super(beans);
-      }
-      private steamMilk(): void {
-        console.log('Steaming some milk... 🥛');
-      }
-      makeCoffee(shots: number): CoffeeCup {
-        const coffee = super.makeCoffee(shots);
-        this.steamMilk();
-        return {
-          ...coffee,
-          hasMilk: true,
-        };
-      }
-    }
-  
-    class SweetCoffeeMaker extends CoffeeMachine {
-      makeCoffee(shots: number): CoffeeCup {
-        const coffee = super.makeCoffee(shots);
-        return {
-          ...coffee,
-          hasSugar: true,
-        };
-      }
-    }
-  
-    class SweetCaffeLatteMachine extends CoffeeMachine {
-      constructor(
-        beans: number,
-        private sugar: SugarSource,
-        private milk: MilkFrother,
-      ) {
-        super(beans);
-      }
-      makeCoffee(shots: number): CoffeeCup {
-        const coffee = super.makeCoffee(shots);
-        const milkCoffee = this.milk.makeMilk(coffee);
-        return this.sugar.addSugar(milkCoffee);
-      }
-    }
-    const machine = new SweetCaffeLatteMachine(
-      32,
-      new AutomaticSugarMixer(),
-      new FancyMilkSteamer()
-    );
-    machine.makeCoffee(2);
+interface Stack {
+    readonly size: number;
+    push(value: string): void;
+    pop(): string;
   }
+  
+  type StackNode = {
+    readonly value: string;
+    readonly next?: StackNode;
+  };
+  
+  class StackImpl implements Stack {
+    private _size: number = 0;
+    private head?: StackNode;
+  
+    constructor(private capacity: number) {}
+    get size() {
+      return this._size;
+    }
+    push(value: string) {
+      if (this.size === this.capacity) {
+        throw new Error('Stack is full!');
+      }
+      const node: StackNode = { value, next: this.head };
+      this.head = node;
+      this._size++;
+    }
+    pop(): string {
+      if (this.head == null) {
+        throw new Error('Stack is empty!');
+      }
+      const node = this.head;
+      this.head = node.next;
+      this._size--;
+      return node.value;
+    }
+  }
+  
+  const stack = new StackImpl(10);
+  stack.push('Ellie 1');
+  stack.push('Bob 2');
+  stack.push('Steve 3');
+  while (stack.size !== 0) {
+    console.log(stack.pop());
+  }
+  
+  stack.pop();
   
