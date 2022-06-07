@@ -1,5 +1,5 @@
 /**
- * Let's make a calculatordd 🧮
+ * Let's make a calculator 🧮
  */
 
 //타입을 지정해주자 add, substract, muliply, divide , 'remainder,
