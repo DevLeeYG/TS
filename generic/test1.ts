@@ -67,4 +67,3 @@ console.log(GenericReturnFunc<number>(1))
   let myInputType: <Input>(arg: Input) => Input = InputType;
 
 
-  console.log(myInputType<Input>(5))
