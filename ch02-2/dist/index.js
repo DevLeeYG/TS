@@ -1,11 +1,8 @@
 "use strict";
 let MAX_AGE = 100;
-class Person {
-    constructor(name, age) {
-        this.name = name;
-        this.age = age;
-    }
-}
+// class Person implements IPerson{
+//     constructor(public name:string,public age:number){}
+// }
 function makeRandomNumber(max = MAX_AGE) {
     return Math.ceil((Math.random() * max));
 }
